@@ -26,10 +26,10 @@ def extract_zipped_content(archive_name, filename):
 def parse_customProp_file(xmlContent):
     """ to document """
     tree = ETfromstring(xmlContent)
-    childLst = tree.getchildren()
+    childLst = list(tree)
     var = {}
     for child in childLst:
-        var.update({child.get('name') : (child.getchildren())[0].text})
+        var.update({child.get('name') : list(child)[0].text})
     # navigation sample in tree
     """
     child = childLst[1]
@@ -37,11 +37,33 @@ def parse_customProp_file(xmlContent):
     print( (child.getchildren())[0].text)
     """
     return var
+
+# Try to re-construct the customProps.XML file
+def data2XMLelementTree( headersDatas):
+    ###'<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\" ?>'
+    root = Element("Properties")
+    tree = ET(root)
+    for p in headersDatas:
+        elt = SubElement(root, p)
+        val = headersDatas[f"{p}"]
+        elt.text = val
+        #print( f"p= {p} and val={val}")
+    return tree
+
+def flushXmlFile(tree):
+    fichier_xml = open("test.xml","w")
+    tree.write(fichier_xml, encoding='unicode', xml_declaration='UTF-8')
+    fichier_xml.close()
+    return
+
+
        
 if __name__ == '__main__':
     #print_content_file_info('REVD-2019.docx')
     print ( 'exctact in rawD variable')
     rawD = extract_zipped_content('REVD-2019.docx','docProps/custom.xml')
-    print (
-        parse_customProp_file(rawD)
-        )
+    myProps = parse_customProp_file(rawD)
+    var = data2XMLelementTree(myProps)
+    #print ( myProps)
+    flushXmlFile( var )
+    #print (var)
