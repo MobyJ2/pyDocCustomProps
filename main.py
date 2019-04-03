@@ -57,7 +57,7 @@ def flushXmlFile(tree):
     return
 
 
-       
+
 if __name__ == '__main__':
     #print_content_file_info('REVD-2019.docx')
     print ( 'exctact in rawD variable')
@@ -67,3 +67,18 @@ if __name__ == '__main__':
     #print ( myProps)
     flushXmlFile( var )
     #print (var)
+    tree = ETfromstring(rawD) #for test on tree.
+
+    Hdr_VTypes = '{http://schemas.openxmlformats.org/officeDocument/2006/docPropsVTypes}'
+    Hdr_Custom = '{http://schemas.openxmlformats.org/officeDocument/2006/custom-properties}'
+    for elt in tree.iter(f"{Hdr_Custom}property"):
+	#print( Element.attrib Element.tag Element.text)
+        print(
+            #f"elt.tag :{elt.tag}\n"
+            f"   ..name : {elt.attrib['name']}\n"
+            f"   ..val : {elt[0].text}\n"
+            #f"   .text : {elt.text}\n"
+	    #f"   .att : {elt.attrib}\n"
+            )
+        break
+
