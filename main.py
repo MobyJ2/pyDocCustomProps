@@ -72,11 +72,20 @@ if __name__ == '__main__':
     xmlns = {'Cust':'http://schemas.openxmlformats.org/officeDocument/2006/custom-properties',
              'Vt'  :'http://schemas.openxmlformats.org/officeDocument/2006/docPropsVTypes'}
 
-    for elt in tree.findall("Cust:property", xmlns ):
-        print( f"   ..name : {elt.attrib['name']}\n"
-	       f"   ..val : {elt[0].text}\n"
-               )
-        break
+    for elt in tree.findall("Cust:property[@name]", xmlns):
+            print(         f"   prop : {elt.attrib['name']}")
+            for chld in elt.findall("Vt:lpwstr", xmlns):
+                    print( f"   ---->:{chld.text}")
+            print("")
+            break #break after the first iteration
 
     tree.find("Cust:property", xmlns ).attrib['name']
     tree.find("Cust:property", xmlns ).find("Vt:lpwstr", xmlns).text
+
+    tree.find("Cust:property[@name='ref-modele']", xmlns)
+    tree.find("Cust:property[@name='ref-modele']", xmlns).find("Vt:lpwstr", xmlns).text
+
+    propName = 'ref-modele'
+    tree.find(f"Cust:property[@name='{propName}']", xmlns).find("Vt:lpwstr", xmlns).text
+
+    
